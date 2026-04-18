@@ -1,1 +1,285 @@
 @import "tailwindcss";
+
+
+@theme {
+  /* COLORS */
+  --color-canvas: #F5F4F0;
+  --color-surface: #FFFFFF;
+  --color-ink: #1C1C1E;
+  --color-muted: #6B6B6B;
+  --color-faint: #7A7A79;
+  --color-border: #E2E0DA;
+
+  --color-primary: #1A3A5C;
+  --color-primary-light: #2A5080;
+  --color-primary-soft: #EAF0F7;
+
+  --color-teal: #2A7F7F;
+  --color-teal-soft: #E6F4F4;
+
+  --color-amber: #C47A3A;
+  --color-amber-soft: #FEF6EC;
+
+  --color-green-badge: #ECFDF5;
+  --color-green-text: #065F46;
+
+  --color-red-badge: #FEF2F2;
+  --color-red-text: #991B1B;
+
+  --color-blue-badge: #EFF6FF;
+  --color-blue-text: #1E40AF;
+
+  /* FONTS */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* RADIUS */
+  --radius-xl2: 1rem;
+  --radius-xl3: 1.5rem;
+
+  /* SHADOWS */
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-lift: 0 4px 24px rgba(0, 0, 0, 0.09);
+
+  /* FONT SIZE */
+  --text-2xs: 0.65rem;
+}
+
+/* ─────────────────────────────────────────────
+   BASE STYLES
+───────────────────────────────────────────── */
+@layer base {
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background: #D6E4F0;
+    color: #1A3A5C;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #D1CFC9;
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #AEAEAD;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   UTILITIES (clean shortcuts)
+───────────────────────────────────────────── */
+@layer utilities {
+  .bg-canvas {
+    background: var(--color-canvas);
+  }
+
+  .bg-surface {
+    background: var(--color-surface);
+  }
+
+  .text-ink {
+    color: var(--color-ink);
+  }
+
+  .text-muted {
+    color: var(--color-muted);
+  }
+
+  .text-faint {
+    color: var(--color-faint);
+  }
+
+  .border-default {
+    border-color: var(--color-border);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-lift {
+    box-shadow: var(--shadow-lift);
+  }
+
+  .rounded-xl2 {
+    border-radius: var(--radius-xl2);
+  }
+
+  .rounded-xl3 {
+    border-radius: var(--radius-xl3);
+  }
+
+  .text-2xs {
+    font-size: var(--text-2xs);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+/* ─────────────────────────────────────────────
+   COMPONENTS
+───────────────────────────────────────────── */
+@layer components {
+
+  /* Shimmer skeleton */
+  .shimmer {
+    background: linear-gradient(90deg,
+        #ECEAE4 0px,
+        #F5F3EE 40px,
+        #ECEAE4 80px);
+    background-size: 700px 100%;
+    animation: shimmer 1.6s infinite linear;
+  }
+
+  /* Input */
+  .input-field {
+    @apply w-full bg-white border rounded-xl px-4 py-3 text-sm placeholder:text-[color:var(--color-faint)] transition-all duration-200 outline-none;
+
+    border-color: var(--color-border);
+    color: var(--color-ink);
+  }
+
+  .input-field:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.10);
+  }
+
+  /* Card */
+  .card {
+    @apply bg-white border rounded-xl2;
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Primary Button */
+  .btn-primary {
+    @apply text-white font-medium text-sm px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200;
+    background: var(--color-primary);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-primary-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(26, 58, 92, 0.25);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Secondary Button */
+  .btn-secondary {
+    @apply font-medium text-sm px-5 py-2.5 rounded-xl transition-all duration-200 border;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    background: transparent;
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-primary-soft);
+  }
+
+  /* Section Label */
+  .section-label {
+    @apply uppercase tracking-widest text-2xs;
+    font-family: var(--font-mono);
+    color: var(--color-faint);
+  }
+
+  /* Prose */
+  .prose-medical {
+    @apply text-sm leading-relaxed;
+    color: var(--color-muted);
+  }
+
+  .prose-medical strong {
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -700px 0;
+  }
+
+  100% {
+    background-position: 700px 0;
+  }
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-section {
+  opacity: 0;
+  animation: fadeUp 0.45s ease forwards;
+}
+
+.animate-section:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.animate-section:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.animate-section:nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.animate-section:nth-child(4) {
+  animation-delay: 240ms;
+}
