@@ -43,14 +43,11 @@ export default function SearchForm({ onSearch, loading, compact = false }) {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full  max-w-2xl mx-auto">
       {/* Hero text */}
-      <div className="text-center mb-10">
-        <div className="inline-flex items-center gap-2 bg-primary-soft border border-primary/20 rounded-full px-4 py-1.5 mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-          <span className="section-label text-primary">Research-backed answers</span>
-        </div>
-        <h1 className="font-display text-4xl sm:text-5xl text-ink font-medium leading-tight tracking-tight mb-4">
+      <div className="text-center mb-8">
+        
+        <h1 className="font-display text-4xl sm:text-5xl text-ink font-medium leading-tight tracking-tight mb-1">
           Understand your condition<br />
           <span className="italic font-light text-primary">with confidence</span>
         </h1>

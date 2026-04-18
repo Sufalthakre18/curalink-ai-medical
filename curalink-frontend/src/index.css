@@ -39,7 +39,7 @@
   --radius-xl3: 1.5rem;
 
   /* SHADOWS */
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.2);
   --shadow-lift: 0 4px 24px rgba(0, 0, 0, 0.09);
 
   /* FONT SIZE */

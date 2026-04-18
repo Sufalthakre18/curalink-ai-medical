@@ -11,33 +11,27 @@ function SourceBadge({ source }) {
 }
 
 function ScoreBar({ score }) {
-  const pct = Math.round((score || 0) * 100)
+  // score comes from rawData as 0-100 integer already
+  // clamp strictly between 0 and 100
+  const pct = Math.min(100, Math.max(0, Math.round(Number(score) || 0)))
   return (
     <div className="flex items-center gap-2">
       <div className="flex-1 h-1 bg-border rounded-full overflow-hidden">
-        <div
-          className="h-full bg-primary/40 rounded-full transition-all"
-          style={{ width: `${pct}%` }}
-        />
+        <div className="h-full bg-primary/40 rounded-full transition-all" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-2xs font-mono text-faint w-7 text-right">{pct}%</span>
+      <span className="text-2xs font-mono text-faint w-8 text-right">{pct}%</span>
     </div>
   )
 }
 
 export default function PublicationCard({ pub, index }) {
-  const {
-    title, abstract, authors, year, journal,
-    source, url, relevanceScore, openAccess, citedByCount,
-  } = pub
+  const { title, abstract, authors, year, journal, source, url, relevanceScore, openAccess, citedByCount } = pub
 
-  const abstract_short = abstract?.length > 240
-    ? abstract.substring(0, 240) + '...'
-    : abstract
+  const abstract_short = abstract?.length > 240 ? abstract.substring(0, 240) + '...' : abstract
 
   return (
     <div
-      className="card p-5 flex flex-col gap-3 hover:shadow-lift transition-all duration-200 animate-section group"
+      className="card p-5 flex flex-col gap-3 hover:shadow-lift transition-all duration-200 group"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       {/* Top row */}
@@ -60,47 +54,33 @@ export default function PublicationCard({ pub, index }) {
 
       {/* Abstract */}
       {abstract_short && (
-        <p className="text-xs text-muted leading-relaxed line-clamp-3">
-          {abstract_short}
-        </p>
+        <p className="text-xs text-muted leading-relaxed line-clamp-3">{abstract_short}</p>
       )}
 
       {/* Footer */}
       <div className="mt-auto pt-2 border-t border-border space-y-2.5">
-        {/* Authors + journal */}
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             {authors?.length > 0 && (
               <p className="text-xs text-muted truncate">
-                {authors.slice(0, 3).join(', ')}
-                {authors.length > 3 && ` +${authors.length - 3}`}
+                {authors.slice(0, 3).join(', ')}{authors.length > 3 && ` +${authors.length - 3}`}
               </p>
             )}
-            {journal && (
-              <p className="text-2xs text-faint font-mono truncate">{journal}</p>
-            )}
+            {journal && <p className="text-2xs text-faint font-mono truncate">{journal}</p>}
           </div>
           {citedByCount > 0 && (
-            <span className="text-2xs font-mono text-faint flex-shrink-0">
-              {citedByCount} citations
-            </span>
+            <span className="text-2xs font-mono text-faint flex-shrink-0">{citedByCount} cited</span>
           )}
         </div>
 
-        {/* Relevance */}
         <div>
-          <p className="section-label mb-1">Relevance</p>
+          <p className="font-mono text-2xs uppercase tracking-widest text-faint mb-1">Relevance</p>
           <ScoreBar score={relevanceScore} />
         </div>
 
-        {/* Link */}
         {url && (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary-light font-medium transition-colors"
-          >
+          <a href={url} target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary-light font-medium transition-colors">
             View paper
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
               <path d="M2 8L8 2M8 2H4M8 2V6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
