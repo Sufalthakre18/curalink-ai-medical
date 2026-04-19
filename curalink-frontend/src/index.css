@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────
-   THEME TOKENS (Tailwind v4 style)
+   THEME TOKENS (FIXED — NO @theme)
 ───────────────────────────────────────────── */
-@theme {
+:root {
   /* COLORS */
   --canvas:  #F5F4F0;
   --surface: #FFFFFF;
@@ -19,7 +19,7 @@
   --teal: #2A7F7F;
   --teal-soft: #E6F4F4;
 
-  /* DARK MODE (Focus Mode) */
+  /* DARK MODE TOKENS */
   --dark-canvas:  #0F1419;
   --dark-surface: #1A2332;
   --dark-ink:     #E8EAF0;
@@ -47,7 +47,7 @@
 }
 
 /* ─────────────────────────────────────────────
-   DARK MODE SWITCH (Focus Mode)
+   DARK MODE
 ───────────────────────────────────────────── */
 .dark {
   --canvas:  var(--dark-canvas);
@@ -91,7 +91,6 @@
     color: #E8EAF0;
   }
 
-  /* Scrollbar */
   ::-webkit-scrollbar {
     width: 5px;
   }
@@ -133,7 +132,6 @@
 ───────────────────────────────────────────── */
 @layer components {
 
-  /* Shimmer */
   .shimmer {
     background: linear-gradient(
       90deg,
@@ -145,7 +143,6 @@
     animation: shimmer 1.6s infinite linear;
   }
 
-  /* Input */
   .input-field {
     @apply w-full px-4 py-3 text-sm rounded-xl outline-none transition-all duration-200;
     background: var(--surface);
@@ -162,7 +159,6 @@
     box-shadow: 0 0 0 3px rgba(26,58,92,0.12);
   }
 
-  /* Card */
   .card {
     @apply border rounded-xl2;
     background: var(--surface);
@@ -171,7 +167,6 @@
     transition: all 0.3s ease;
   }
 
-  /* Primary Button */
   .btn-primary {
     @apply px-6 py-3 text-sm rounded-xl font-medium text-white flex items-center justify-center gap-2;
     background: var(--primary);
@@ -183,7 +178,6 @@
     transform: translateY(-1px);
   }
 
-  /* Secondary Button */
   .btn-secondary {
     @apply px-5 py-2.5 text-sm rounded-xl font-medium border;
     border-color: var(--primary);
@@ -194,14 +188,12 @@
     background: var(--primary-soft);
   }
 
-  /* Labels */
   .section-label {
     @apply uppercase tracking-widest text-2xs;
     font-family: var(--font-mono);
     color: var(--faint);
   }
 
-  /* Prose */
   .prose-medical {
     @apply text-sm leading-relaxed;
     color: var(--muted);
@@ -231,7 +223,6 @@
   100% { opacity: 1; transform: translateX(0); }
 }
 
-/* Animation Helpers */
 .animate-section {
   opacity: 0;
   animation: fadeUp 0.45s ease forwards;
