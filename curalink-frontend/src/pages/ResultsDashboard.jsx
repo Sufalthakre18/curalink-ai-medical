@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import StructuredAnswer from '../components/StructuredAnswer'
 import PublicationCard from '../components/PublicationCard'
 import TrialCard from '../components/TrialCard'
-import ExportPDF from '../components/ExportPDF'
+import ExportPDF from '../components/Exportpdf'
 import { EmptyState } from '../components/ErrorState'
 
 const TABS = ['Answer', 'Publications', 'Clinical Trials']
