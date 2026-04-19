@@ -1,16 +1,15 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────
-   THEME TOKENS (FIXED — NO @theme)
+   THEME TOKENS
 ───────────────────────────────────────────── */
 :root {
-  /* COLORS */
-  --canvas:  #F5F4F0;
+  --canvas: #F5F4F0;
   --surface: #FFFFFF;
-  --ink:     #1C1C1E;
-  --muted:   #6B6B6B;
-  --faint:   #7A7A79;
-  --border:  #E2E0DA;
+  --ink: #1C1C1E;
+  --muted: #6B6B6B;
+  --faint: #7A7A79;
+  --border: #E2E0DA;
 
   --primary: #1A3A5C;
   --primary-light: #2A5080;
@@ -19,66 +18,58 @@
   --teal: #2A7F7F;
   --teal-soft: #E6F4F4;
 
-  /* DARK MODE TOKENS */
-  --dark-canvas:  #0F1419;
+  --dark-canvas: #0F1419;
   --dark-surface: #1A2332;
-  --dark-ink:     #E8EAF0;
-  --dark-muted:   #8B95A8;
-  --dark-faint:   #4A5568;
-  --dark-border:  #2D3748;
+  --dark-ink: #E8EAF0;
+  --dark-muted: #8B95A8;
+  --dark-faint: #4A5568;
+  --dark-border: #2D3748;
   --dark-primary: #4A90D9;
-  --dark-soft:    #1A2A3D;
+  --dark-soft: #1A2A3D;
 
-  /* FONTS */
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
-  /* SHADOWS */
-  --shadow-card: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
-  --shadow-lift: 0 4px 24px rgba(0,0,0,0.09);
+  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-lift: 0 4px 24px rgba(0, 0, 0, 0.09);
 
-  /* RADIUS */
   --radius-xl2: 1rem;
   --radius-xl3: 1.5rem;
 
-  /* FONT SIZE */
   --text-2xs: 0.65rem;
 }
 
-/* ─────────────────────────────────────────────
-   DARK MODE
-───────────────────────────────────────────── */
+/* DARK MODE */
 .dark {
-  --canvas:  var(--dark-canvas);
+  --canvas: var(--dark-canvas);
   --surface: var(--dark-surface);
-  --ink:     var(--dark-ink);
-  --muted:   var(--dark-muted);
-  --faint:   var(--dark-faint);
-  --border:  var(--dark-border);
+  --ink: var(--dark-ink);
+  --muted: var(--dark-muted);
+  --faint: var(--dark-faint);
+  --border: var(--dark-border);
   --primary: var(--dark-primary);
   --primary-soft: var(--dark-soft);
 }
 
-/* ─────────────────────────────────────────────
-   BASE
-───────────────────────────────────────────── */
+/* BASE */
 @layer base {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
   html {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   body {
     background: var(--canvas);
     color: var(--ink);
     line-height: 1.6;
-    transition: all 0.3s ease;
   }
 
   ::selection {
@@ -101,44 +92,65 @@
   }
 }
 
-/* ─────────────────────────────────────────────
-   UTILITIES
-───────────────────────────────────────────── */
+/* UTILITIES */
 @layer utilities {
-  .bg-canvas { background: var(--canvas); }
-  .bg-surface { background: var(--surface); }
+  .bg-canvas {
+    background: var(--canvas);
+  }
 
-  .text-ink { color: var(--ink); }
-  .text-muted { color: var(--muted); }
-  .text-faint { color: var(--faint); }
+  .bg-surface {
+    background: var(--surface);
+  }
 
-  .border-default { border-color: var(--border); }
+  .text-ink {
+    color: var(--ink);
+  }
 
-  .shadow-card { box-shadow: var(--shadow-card); }
-  .shadow-lift { box-shadow: var(--shadow-lift); }
+  .text-muted {
+    color: var(--muted);
+  }
 
-  .rounded-xl2 { border-radius: var(--radius-xl2); }
-  .rounded-xl3 { border-radius: var(--radius-xl3); }
+  .text-faint {
+    color: var(--faint);
+  }
 
-  .text-2xs { font-size: var(--text-2xs); }
+  .border-default {
+    border-color: var(--border);
+  }
 
-  .font-display { font-family: var(--font-display); }
-  .font-body { font-family: var(--font-body); }
-  .font-mono { font-family: var(--font-mono); }
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-lift {
+    box-shadow: var(--shadow-lift);
+  }
+
+  .text-2xs {
+    font-size: var(--text-2xs);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
 }
 
-/* ─────────────────────────────────────────────
-   COMPONENTS
-───────────────────────────────────────────── */
+/* COMPONENTS */
 @layer components {
 
   .shimmer {
-    background: linear-gradient(
-      90deg,
-      var(--border) 0px,
-      var(--canvas) 40px,
-      var(--border) 80px
-    );
+    background: linear-gradient(90deg,
+        var(--border) 0px,
+        var(--canvas) 40px,
+        var(--border) 80px);
     background-size: 700px 100%;
     animation: shimmer 1.6s infinite linear;
   }
@@ -156,11 +168,13 @@
 
   .input-field:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(26,58,92,0.12);
+    box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.12);
   }
 
+  /* ✅ FIXED */
   .card {
-    @apply border rounded-xl2;
+    @apply border;
+    border-radius: var(--radius-xl2);
     background: var(--surface);
     border-color: var(--border);
     box-shadow: var(--shadow-card);
@@ -189,7 +203,8 @@
   }
 
   .section-label {
-    @apply uppercase tracking-widest text-2xs;
+    @apply uppercase tracking-widest;
+    font-size: var(--text-2xs);
     font-family: var(--font-mono);
     color: var(--faint);
   }
@@ -205,22 +220,39 @@
   }
 }
 
-/* ─────────────────────────────────────────────
-   ANIMATIONS
-───────────────────────────────────────────── */
+/* ANIMATIONS */
 @keyframes shimmer {
-  0% { background-position: -700px 0; }
-  100% { background-position: 700px 0; }
+  0% {
+    background-position: -700px 0;
+  }
+
+  100% {
+    background-position: 700px 0;
+  }
 }
 
 @keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(12px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideIn {
-  0% { opacity: 0; transform: translateX(-8px); }
-  100% { opacity: 1; transform: translateX(0); }
+  0% {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .animate-section {
