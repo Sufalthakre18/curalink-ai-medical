@@ -2,6 +2,8 @@
  * Build a direct answer from raw data when LLM didn't generate one.
  * This ensures the user ALWAYS gets a readable answer.
  */
+import RelevanceBadge from './RelevanceBadge'
+
 function buildDirectAnswer(structured, rawData, followUpQuery, disease) {
   // If LLM gave us a good personalizedInsight, use it
   const insight = structured?.personalizedInsight
@@ -59,7 +61,7 @@ function Finding({ finding, supportedBy, significance }) {
   )
 }
 
-export default function StructuredAnswer({ structured, rawData, meta, queryInfo, isFollowUp, followUpQuery }) {
+export default function StructuredAnswer({ structured, rawData, meta, queryInfo, isFollowUp, followUpQuery, relevance, onSuggestionClick }) {
   if (!structured && !rawData) return null
 
   const cond     = structured?.conditionOverview
@@ -110,7 +112,10 @@ export default function StructuredAnswer({ structured, rawData, meta, queryInfo,
       {/* ─── BODY ─── */}
       <div className="p-6 space-y-6">
 
-        {/* 1. DIRECT ANSWER — always first, always visible */}
+        {/* Relevance badge — shown when evidence is weak/absent */}
+      <RelevanceBadge relevance={relevance} onSuggestionClick={onSuggestionClick} />
+
+      {/* 1. DIRECT ANSWER — always first, always visible */}
         <div className="bg-primary-soft border border-primary/20 rounded-xl p-5">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">💡</span>
@@ -170,7 +175,7 @@ export default function StructuredAnswer({ structured, rawData, meta, queryInfo,
         {/* 4. DISCLAIMER */}
         {disclaimer && (
           <div className="flex gap-3 bg-canvas rounded-xl p-4 border border-border">
-            <span className="text-sm flex-shrink-0">⚠️</span>
+         
             <p className="text-xs text-muted leading-relaxed">{disclaimer}</p>
           </div>
         )}

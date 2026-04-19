@@ -1,14 +1,16 @@
+/**
+ * Research Pipeline (ES6 Version)
+ */
+
 import { expandQuery } from "../services/queryExpansion.js";
 import { getPubMedPublications } from "../services/pubmedService.js";
 import { getOpenAlexPublications } from "../services/openAlexService.js";
 import { getClinicalTrials } from "../services/clinicalTrialsService.js";
 import { rankPublications, rankClinicalTrials } from "../services/rankingService.js";
 import { generateResponse } from "../services/llmService.js";
+import { parseQueryIntent, filterByRelevance } from "../services/relevanceFilter.js";
 import Session from "../models/Session.js";
 
-/**
- * Run the full research pipeline
- */
 export async function runResearchPipeline(input, session) {
   const startTime = Date.now();
   const { disease = "", query = "", location = "" } = input;
@@ -20,8 +22,7 @@ export async function runResearchPipeline(input, session) {
   console.log(`  Location: ${location}`);
   console.log("═══════════════════════════════════════════════");
 
-  // STEP 1: QUERY EXPANSION
-  console.log("\n📝 STEP 1: Query Expansion");
+  // STEP 1: Query Expansion
   const expandedQuery = expandQuery({ disease, query, location });
 
   const cacheKey = `${disease.toLowerCase()}_${query.toLowerCase()}`;
@@ -29,8 +30,7 @@ export async function runResearchPipeline(input, session) {
     session.cachedResults?.cacheKey === cacheKey &&
     session.cachedResults?.publications?.length > 0 &&
     session.cachedResults?.cachedAt &&
-    Date.now() - new Date(session.cachedResults.cachedAt).getTime() <
-      30 * 60 * 1000;
+    Date.now() - new Date(session.cachedResults.cachedAt).getTime() < 30 * 60 * 1000;
 
   let publications = [];
   let clinicalTrials = [];
@@ -40,51 +40,48 @@ export async function runResearchPipeline(input, session) {
     publications = session.cachedResults.publications;
     clinicalTrials = session.cachedResults.clinicalTrials;
   } else {
-    const [pubmedResults, openAlexResults, trialsResults] =
-      await Promise.allSettled([
-        getPubMedPublications(expandedQuery.pubmedQuery),
-        getOpenAlexPublications(expandedQuery.openAlexQuery),
-        getClinicalTrials(
-          expandedQuery.clinicalTrialsCondition,
-          expandedQuery.clinicalTrialsIntervention,
-          location
-        ),
-      ]);
+    const [pubmedResults, openAlexResults, trialsResults] = await Promise.allSettled([
+      getPubMedPublications(expandedQuery.pubmedQuery),
+      getOpenAlexPublications(expandedQuery.openAlexQuery),
+      getClinicalTrials(
+        expandedQuery.clinicalTrialsCondition,
+        expandedQuery.clinicalTrialsIntervention,
+        location
+      ),
+    ]);
 
-    const pubmedArticles =
-      pubmedResults.status === "fulfilled" ? pubmedResults.value : [];
-    const openAlexArticles =
-      openAlexResults.status === "fulfilled" ? openAlexResults.value : [];
-    const trials =
-      trialsResults.status === "fulfilled" ? trialsResults.value : [];
-
-    if (pubmedArticles.length < 5 && expandedQuery.variants.length > 1) {
-      const variantPubmed = await getPubMedPublications(
-        expandedQuery.variants[1],
-        30
-      );
-      pubmedArticles.push(...variantPubmed);
-    }
+    const pubmedArticles = pubmedResults.status === "fulfilled" ? pubmedResults.value : [];
+    const openAlexArticles = openAlexResults.status === "fulfilled" ? openAlexResults.value : [];
+    const trials = trialsResults.status === "fulfilled" ? trialsResults.value : [];
 
     publications = [...pubmedArticles, ...openAlexArticles];
     clinicalTrials = trials;
   }
 
-  // STEP 3: RANKING
+  // STEP 3: Ranking
   const [rankedPublications, rankedTrials] = await Promise.all([
     rankPublications(publications, expandedQuery.primaryQuery),
     rankClinicalTrials(clinicalTrials, expandedQuery.primaryQuery),
   ]);
 
+  // STEP 3.5: Relevance Filter
+  const parsedQuery = parseQueryIntent({ disease, query });
+  const relevanceResult = filterByRelevance(rankedPublications, parsedQuery);
+
+  const finalPublications = relevanceResult.papers;
+
   // STEP 4: LLM
+  const conversationHistory = session.messages || [];
+
   const { structured, llmUsed } = await generateResponse(
     expandedQuery,
-    rankedPublications,
+    finalPublications,
     rankedTrials,
-    session.messages || []
+    conversationHistory,
+    relevanceResult
   );
 
-  // STEP 5: FINAL RESPONSE
+  // STEP 5: Build Response
   const elapsed = Date.now() - startTime;
 
   const finalResponse = {
@@ -93,16 +90,25 @@ export async function runResearchPipeline(input, session) {
     query: {
       original: { disease, query, location },
       expanded: expandedQuery.primaryQuery,
+      parsedIntent: parsedQuery.intent,
     },
     structured,
     rawData: {
-      publications: rankedPublications.map(formatPublicationForResponse),
+      publications: finalPublications.map(formatPublicationForResponse),
       clinicalTrials: rankedTrials.map(formatTrialForResponse),
+    },
+    relevance: {
+      level: relevanceResult.relevanceLevel,
+      evidenceSummary: relevanceResult.evidenceSummary,
+      passingCount: relevanceResult.passingCount,
+      suggestions: relevanceResult.suggestions,
     },
     meta: {
       llmUsed,
       publicationsRetrieved: publications.length,
       trialsRetrieved: clinicalTrials.length,
+      publicationsShown: finalPublications.length,
+      trialsShown: rankedTrials.length,
       processingTimeMs: elapsed,
       cached: isSameContext,
     },
@@ -126,9 +132,8 @@ export async function runResearchPipeline(input, session) {
   return finalResponse;
 }
 
-/**
- * Update session
- */
+/* SESSION UPDATE */
+
 async function updateSession(session, data) {
   try {
     if (data.disease) session.context.disease = data.disease;
@@ -138,10 +143,7 @@ async function updateSession(session, data) {
     session.context.queryHistory.push(data.expandedQuery.primaryQuery);
 
     session.messages.push({ role: "user", content: data.userMessage });
-    session.messages.push({
-      role: "assistant",
-      content: data.assistantMessage,
-    });
+    session.messages.push({ role: "assistant", content: data.assistantMessage });
 
     if (session.messages.length > 20) {
       session.messages = session.messages.slice(-20);
@@ -160,18 +162,17 @@ async function updateSession(session, data) {
     session.updatedAt = new Date();
     await session.save();
   } catch (err) {
-    console.error("[Session Error]:", err.message);
+    console.error("Session update error:", err.message);
   }
 }
 
-/**
- * Format publication
- */
+/* FORMATTERS */
+
 function formatPublicationForResponse(pub) {
   return {
     id: pub.id,
     title: pub.title,
-    abstract: pub.abstract?.substring(0, 500) || "",
+    abstract: pub.abstract?.slice(0, 500) || "",
     authors: pub.authors || [],
     year: pub.year,
     journal: pub.journal || "",
@@ -181,17 +182,14 @@ function formatPublicationForResponse(pub) {
   };
 }
 
-/**
- * Format trial
- */
 function formatTrialForResponse(trial) {
   return {
     id: trial.id,
     title: trial.title,
     status: trial.status,
     phase: trial.phase,
-    summary: trial.summary?.substring(0, 400) || "",
+    summary: trial.summary?.slice(0, 400) || "",
+    conditions: trial.conditions || [],
     url: trial.url,
-    relevanceScore: Math.round((trial.relevanceScore || 0) * 100),
   };
 }

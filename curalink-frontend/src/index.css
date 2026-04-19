@@ -1,72 +1,84 @@
 @import "tailwindcss";
 
-
+/* ─────────────────────────────────────────────
+   THEME TOKENS (Tailwind v4 style)
+───────────────────────────────────────────── */
 @theme {
   /* COLORS */
-  --color-canvas: #F5F4F0;
-  --color-surface: #FFFFFF;
-  --color-ink: #1C1C1E;
-  --color-muted: #6B6B6B;
-  --color-faint: #7A7A79;
-  --color-border: #E2E0DA;
+  --canvas:  #F5F4F0;
+  --surface: #FFFFFF;
+  --ink:     #1C1C1E;
+  --muted:   #6B6B6B;
+  --faint:   #7A7A79;
+  --border:  #E2E0DA;
 
-  --color-primary: #1A3A5C;
-  --color-primary-light: #2A5080;
-  --color-primary-soft: #EAF0F7;
+  --primary: #1A3A5C;
+  --primary-light: #2A5080;
+  --primary-soft: #EAF0F7;
 
-  --color-teal: #2A7F7F;
-  --color-teal-soft: #E6F4F4;
+  --teal: #2A7F7F;
+  --teal-soft: #E6F4F4;
 
-  --color-amber: #C47A3A;
-  --color-amber-soft: #FEF6EC;
-
-  --color-green-badge: #ECFDF5;
-  --color-green-text: #065F46;
-
-  --color-red-badge: #FEF2F2;
-  --color-red-text: #991B1B;
-
-  --color-blue-badge: #EFF6FF;
-  --color-blue-text: #1E40AF;
+  /* DARK MODE (Focus Mode) */
+  --dark-canvas:  #0F1419;
+  --dark-surface: #1A2332;
+  --dark-ink:     #E8EAF0;
+  --dark-muted:   #8B95A8;
+  --dark-faint:   #4A5568;
+  --dark-border:  #2D3748;
+  --dark-primary: #4A90D9;
+  --dark-soft:    #1A2A3D;
 
   /* FONTS */
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
+  /* SHADOWS */
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+  --shadow-lift: 0 4px 24px rgba(0,0,0,0.09);
+
   /* RADIUS */
   --radius-xl2: 1rem;
   --radius-xl3: 1.5rem;
-
-  /* SHADOWS */
-  --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-lift: 0 4px 24px rgba(0, 0, 0, 0.09);
 
   /* FONT SIZE */
   --text-2xs: 0.65rem;
 }
 
 /* ─────────────────────────────────────────────
-   BASE STYLES
+   DARK MODE SWITCH (Focus Mode)
+───────────────────────────────────────────── */
+.dark {
+  --canvas:  var(--dark-canvas);
+  --surface: var(--dark-surface);
+  --ink:     var(--dark-ink);
+  --muted:   var(--dark-muted);
+  --faint:   var(--dark-faint);
+  --border:  var(--dark-border);
+  --primary: var(--dark-primary);
+  --primary-soft: var(--dark-soft);
+}
+
+/* ─────────────────────────────────────────────
+   BASE
 ───────────────────────────────────────────── */
 @layer base {
-
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     box-sizing: border-box;
   }
 
   html {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   body {
-    background-color: var(--color-canvas);
-    color: var(--color-ink);
+    background: var(--canvas);
+    color: var(--ink);
     line-height: 1.6;
+    transition: all 0.3s ease;
   }
 
   ::selection {
@@ -74,85 +86,46 @@
     color: #1A3A5C;
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  .dark ::selection {
+    background: #2A4A6A;
+    color: #E8EAF0;
   }
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #D1CFC9;
+    background: var(--border);
     border-radius: 999px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #AEAEAD;
   }
 }
 
 /* ─────────────────────────────────────────────
-   UTILITIES (clean shortcuts)
+   UTILITIES
 ───────────────────────────────────────────── */
 @layer utilities {
-  .bg-canvas {
-    background: var(--color-canvas);
-  }
+  .bg-canvas { background: var(--canvas); }
+  .bg-surface { background: var(--surface); }
 
-  .bg-surface {
-    background: var(--color-surface);
-  }
+  .text-ink { color: var(--ink); }
+  .text-muted { color: var(--muted); }
+  .text-faint { color: var(--faint); }
 
-  .text-ink {
-    color: var(--color-ink);
-  }
+  .border-default { border-color: var(--border); }
 
-  .text-muted {
-    color: var(--color-muted);
-  }
+  .shadow-card { box-shadow: var(--shadow-card); }
+  .shadow-lift { box-shadow: var(--shadow-lift); }
 
-  .text-faint {
-    color: var(--color-faint);
-  }
+  .rounded-xl2 { border-radius: var(--radius-xl2); }
+  .rounded-xl3 { border-radius: var(--radius-xl3); }
 
-  .border-default {
-    border-color: var(--color-border);
-  }
+  .text-2xs { font-size: var(--text-2xs); }
 
-  .shadow-card {
-    box-shadow: var(--shadow-card);
-  }
-
-  .shadow-lift {
-    box-shadow: var(--shadow-lift);
-  }
-
-  .rounded-xl2 {
-    border-radius: var(--radius-xl2);
-  }
-
-  .rounded-xl3 {
-    border-radius: var(--radius-xl3);
-  }
-
-  .text-2xs {
-    font-size: var(--text-2xs);
-  }
-
-  .font-display {
-    font-family: var(--font-display);
-  }
-
-  .font-body {
-    font-family: var(--font-body);
-  }
-
-  .font-mono {
-    font-family: var(--font-mono);
-  }
+  .font-display { font-family: var(--font-display); }
+  .font-body { font-family: var(--font-body); }
+  .font-mono { font-family: var(--font-mono); }
 }
 
 /* ─────────────────────────────────────────────
@@ -160,80 +133,82 @@
 ───────────────────────────────────────────── */
 @layer components {
 
-  /* Shimmer skeleton */
+  /* Shimmer */
   .shimmer {
-    background: linear-gradient(90deg,
-        #ECEAE4 0px,
-        #F5F3EE 40px,
-        #ECEAE4 80px);
+    background: linear-gradient(
+      90deg,
+      var(--border) 0px,
+      var(--canvas) 40px,
+      var(--border) 80px
+    );
     background-size: 700px 100%;
     animation: shimmer 1.6s infinite linear;
   }
 
   /* Input */
   .input-field {
-    @apply w-full bg-white border rounded-xl px-4 py-3 text-sm placeholder:text-[color:var(--color-faint)] transition-all duration-200 outline-none;
+    @apply w-full px-4 py-3 text-sm rounded-xl outline-none transition-all duration-200;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--ink);
+  }
 
-    border-color: var(--color-border);
-    color: var(--color-ink);
+  .input-field::placeholder {
+    color: var(--faint);
   }
 
   .input-field:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(26, 58, 92, 0.10);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26,58,92,0.12);
   }
 
   /* Card */
   .card {
-    @apply bg-white border rounded-xl2;
-    border-color: var(--color-border);
+    @apply border rounded-xl2;
+    background: var(--surface);
+    border-color: var(--border);
     box-shadow: var(--shadow-card);
+    transition: all 0.3s ease;
   }
 
   /* Primary Button */
   .btn-primary {
-    @apply text-white font-medium text-sm px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all duration-200;
-    background: var(--color-primary);
+    @apply px-6 py-3 text-sm rounded-xl font-medium text-white flex items-center justify-center gap-2;
+    background: var(--primary);
+    transition: all 0.2s ease;
   }
 
-  .btn-primary:hover:not(:disabled) {
-    background: var(--color-primary-light);
+  .btn-primary:hover {
+    background: var(--primary-light);
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(26, 58, 92, 0.25);
-  }
-
-  .btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
   }
 
   /* Secondary Button */
   .btn-secondary {
-    @apply font-medium text-sm px-5 py-2.5 rounded-xl transition-all duration-200 border;
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-    background: transparent;
+    @apply px-5 py-2.5 text-sm rounded-xl font-medium border;
+    border-color: var(--primary);
+    color: var(--primary);
   }
 
   .btn-secondary:hover {
-    background: var(--color-primary-soft);
+    background: var(--primary-soft);
   }
 
-  /* Section Label */
+  /* Labels */
   .section-label {
     @apply uppercase tracking-widest text-2xs;
     font-family: var(--font-mono);
-    color: var(--color-faint);
+    color: var(--faint);
   }
 
   /* Prose */
   .prose-medical {
     @apply text-sm leading-relaxed;
-    color: var(--color-muted);
+    color: var(--muted);
   }
 
   .prose-medical strong {
-    color: var(--color-ink);
+    color: var(--ink);
     font-weight: 500;
   }
 }
@@ -242,44 +217,26 @@
    ANIMATIONS
 ───────────────────────────────────────────── */
 @keyframes shimmer {
-  0% {
-    background-position: -700px 0;
-  }
-
-  100% {
-    background-position: 700px 0;
-  }
+  0% { background-position: -700px 0; }
+  100% { background-position: 700px 0; }
 }
 
 @keyframes fadeUp {
-  0% {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideIn {
+  0% { opacity: 0; transform: translateX(-8px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Animation Helpers */
 .animate-section {
   opacity: 0;
   animation: fadeUp 0.45s ease forwards;
 }
 
-.animate-section:nth-child(1) {
-  animation-delay: 0ms;
-}
-
-.animate-section:nth-child(2) {
-  animation-delay: 80ms;
-}
-
-.animate-section:nth-child(3) {
-  animation-delay: 160ms;
-}
-
-.animate-section:nth-child(4) {
-  animation-delay: 240ms;
+.animate-slide-in {
+  animation: slideIn 0.3s ease forwards;
 }

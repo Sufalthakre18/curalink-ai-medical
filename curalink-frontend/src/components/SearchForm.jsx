@@ -49,7 +49,7 @@ export default function SearchForm({ onSearch, loading, compact = false }) {
         
         <h1 className="font-display text-4xl sm:text-5xl text-ink font-medium leading-tight tracking-tight mb-1">
           Understand your condition<br />
-          <span className="italic font-light text-primary">with confidence</span>
+          <span className="italic font-light text-[#028090]">with confidence</span>
         </h1>
         <p className="text-muted font-body text-base max-w-md mx-auto leading-relaxed">
           Search across PubMed, OpenAlex, and ClinicalTrials.gov to get
